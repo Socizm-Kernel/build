@@ -2,3 +2,5 @@ Socizm Build Tools
 
 You must have the path to the Android ARM EABI v4.4.0 Toolchain in your path!
 {REPO_ROOT}/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin
+
+Temporary Build Script is 'supersonic.sh'
