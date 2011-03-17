@@ -16,13 +16,15 @@ BDIR="$RDIR/build"
 KDIR="$RDIR/socizm"
 TDIR="$RDIR/template"
 
+echo "Root Directory......: $RDIR"
+echo "Build Directory.....: $BDIR"
+echo "Source Directory....: $KDIR"
+echo "AnyKernel Template..: $TDIR"
+
 cd $KDIR
 
 echo "-> DISTCLEAN"
-make distclean V=0 -j$J
-
-#echo "-> CLEAN"
-#make clean V=0 -j$J
+#make distclean V=0 -j$J
 
 #echo "-> RESTORE CM7 CONFIG"
 #cp $BDIR/config.gz ./.config.gz
@@ -42,13 +44,14 @@ if [ -f $KDIR/arch/arm/boot/zImage ]; then
         echo "-> Moving zImage to AnyKernel Template..."
         rm -f $TDIR/kernel/zImage
         cp $KDIR/arch/arm/boot/zImage $TDIR/kernel/zImage
-        cd $TDIR
 
         echo "-> Moving Kernel Modules to AnyKernel Template..."
-        find $KDIR -name '*.ko' -exec sh -c 'exec cp -f "$@" $TDIR/system/lib/modules'
+	find . -name "*.ko" -print | while read file; do cp -fv "$file" $TDIR/system/lib/modules/; done
 
         echo "-> Compressing AnyKernel Template..."
         rm -f $RDIR/package.zip
+
+	cd $TDIR
         zip -9 -r -v $RDIR/package.zip * -x .git
 else
         echo "ERROR: NO ZIMAGE!!!"
