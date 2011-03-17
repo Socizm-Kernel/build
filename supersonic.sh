@@ -54,8 +54,13 @@ if [ -f $KDIR/arch/arm/boot/zImage ]; then
         rm -f $TDIR/kernel/zImage
         cp $KDIR/arch/arm/boot/zImage $TDIR/kernel/zImage
 
+	echo "-> Reset AnyKernel Template..."
+	cd $TDIR
+	rm -rf $TDIR/*
+	git reset --hard
+
         echo "-> Moving Kernel Modules to AnyKernel Template..."
-	find . -name "*.ko" -print | while read file; do cp -fv "$file" $TDIR/system/lib/modules/; done
+	find $KDIR -name "*.ko" -print | while read file; do cp -fv "$file" $TDIR/system/lib/modules/; done
 
         echo "-> Compressing AnyKernel Template..."
         rm -f $RDIR/package-unaligned.zip
