@@ -28,10 +28,11 @@ PATH="$RDIR/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin":$PATH
 cd $KDIR
 
 echo "-> DISTCLEAN"
-#make distclean -j$J
+make distclean -j$J
 
 echo "-> Making Cyanogen SuperSonic Default Configuration..."
 make ARCH=arm CROSS_COMPILE=arm-eabi- EXTRA_AFLAGS=$AFLAGS -j$J cyanogen_supersonic_defconfig
+sed -i 's/-cyanogenmod/-socizm/g' $KDIR/.config
 
 #echo "-> Config: Turning on EXT2"
 #sed -i 's/# CONFIG_EXT2_FS is not set/CONFIG_EXT2_FS=y/g' $KDIR/.config
@@ -41,7 +42,7 @@ make ARCH=arm CROSS_COMPILE=arm-eabi- EXTRA_AFLAGS=$AFLAGS -j$J cyanogen_superso
 
 
 echo "-> MAKE ALL"
-#make ARCH=arm CROSS_COMPILE=arm-eabi- EXTRA_AFLAGS=$AFLAGS -j$J all
+make ARCH=arm CROSS_COMPILE=arm-eabi- EXTRA_AFLAGS=$AFLAGS -j$J all
 
 
 echo -n "-> CHECKING FOR ZIMAGE..."
