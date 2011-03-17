@@ -4,11 +4,17 @@
 # Forked CM7 Kernel
 #
 
+
 J=`grep 'processor' /proc/cpuinfo | wc -l`
 AFLAGS=-mfpu=neon
 
-BDIR=`pwd`
-KDIR='../socizm'
+ROOT=`pwd`
+
+RDIR="$(readlink -f `dirname $0`/..)"
+
+BDIR="$RDIR/build"
+KDIR="$RDIR/socizm"
+TDIR="$RDIR/template"
 
 cd $KDIR
 
@@ -27,5 +33,27 @@ make ARCH=arm CROSS_COMPILE=arm-eabi- EXTRA_AFLAGS=$AFLAGS -j$J cyanogen_superso
 
 echo "-> MAKE ALL"
 make ARCH=arm CROSS_COMPILE=arm-eabi- EXTRA_AFLAGS=$AFLAGS -j$J all
+
+echo -n "-> CHECKING FOR ZIMAGE..."
+if [ -f $KDIR/arch/arm/boot/zImage ]; then
+
+        echo "FOUND ZIMAGE!"
+
+        echo "-> Moving zImage to AnyKernel Template..."
+        rm -f $TDIR/kernel/zImage
+        cp $KDIR/arch/arm/boot/zImage $TDIR/kernel/zImage
+        cd $TDIR
+
+        echo "-> Moving Kernel Modules to AnyKernel Template..."
+        find $KDIR -name '*.ko' -exec sh -c 'exec cp -f "$@" $TDIR/system/lib/modules'
+
+        echo "-> Compressing AnyKernel Template..."
+        rm -f $RDIR/package.zip
+        zip -9 -r -v $RDIR/package.zip * -x .git
+else
+        echo "ERROR: NO ZIMAGE!!!"
+        exit
+fi
+
 
 #make CROSS_COMPILE=arm-eabi- ARCH=arm EXTRA_AFLAGS=-mfpu=neon -j`grep 'processor' /proc/cpuinfo | wc -l`
