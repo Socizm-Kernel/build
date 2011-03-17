@@ -28,17 +28,21 @@ PATH="$RDIR/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin":$PATH
 cd $KDIR
 
 echo "-> DISTCLEAN"
-#make distclean V=0 -j$J
+make distclean -j$J
 
-#echo "-> RESTORE CM7 CONFIG"
-#cp $BDIR/config.gz ./.config.gz
-#gunzip ./.config.gz
-
-echo "-> MAKE CYANOGEN_SUPERSONIC_DEFCONFIG"
+echo "-> Making Cyanogen SuperSonic Default Configuration..."
 make ARCH=arm CROSS_COMPILE=arm-eabi- EXTRA_AFLAGS=$AFLAGS -j$J cyanogen_supersonic_defconfig
+
+#echo "-> Config: Turning on EXT2"
+#sed -i 's/# CONFIG_EXT2_FS is not set/CONFIG_EXT2_FS=y/g' $KDIR/.config
+
+#echo "-> Config: Turning on EXT3"
+#sed -i 's/# CONFIG_EXT3_FS is not set/CONFIG_EXT3_FS=y/g' $KDIR/.config
+
 
 echo "-> MAKE ALL"
 make ARCH=arm CROSS_COMPILE=arm-eabi- EXTRA_AFLAGS=$AFLAGS -j$J all
+
 
 echo -n "-> CHECKING FOR ZIMAGE..."
 if [ -f $KDIR/arch/arm/boot/zImage ]; then
