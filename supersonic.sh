@@ -21,6 +21,10 @@ echo "Build Directory.....: $BDIR"
 echo "Source Directory....: $KDIR"
 echo "AnyKernel Template..: $TDIR"
 
+# Add the ARM EABI Toolchain to the PATH
+PATH="$RDIR/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin":$PATH
+
+
 cd $KDIR
 
 echo "-> DISTCLEAN"
