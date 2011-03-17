@@ -57,10 +57,15 @@ if [ -f $KDIR/arch/arm/boot/zImage ]; then
 	find . -name "*.ko" -print | while read file; do cp -fv "$file" $TDIR/system/lib/modules/; done
 
         echo "-> Compressing AnyKernel Template..."
+        rm -f $RDIR/package-unaligned.zip
         rm -f $RDIR/package.zip
 
 	cd $TDIR
         zip -9 -r -v $RDIR/package-unaligned.zip * -x .git
+
+	echo "-> Signing Zip..."
+	cd $RDIR
+	jarsigner -keystore $BDIR/socizm.kstore -storepass "ABC123" -keypass "ABC123" -verbose package-unaligned.zip socizm
 
 	echo "-> Performing Zip Alignment..."
 	$RDIR/prebuilt/sdk/tools/linux/zipalign -f -v 4 $RDIR/package-unaligned.zip $RDIR/package.zip
