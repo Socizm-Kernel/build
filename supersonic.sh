@@ -28,7 +28,7 @@ PATH="$RDIR/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin":$PATH
 cd $KDIR
 
 echo "-> DISTCLEAN"
-make distclean -j$J
+#make distclean -j$J
 
 echo "-> Making Cyanogen SuperSonic Default Configuration..."
 make ARCH=arm CROSS_COMPILE=arm-eabi- EXTRA_AFLAGS=$AFLAGS -j$J cyanogen_supersonic_defconfig
@@ -41,7 +41,7 @@ make ARCH=arm CROSS_COMPILE=arm-eabi- EXTRA_AFLAGS=$AFLAGS -j$J cyanogen_superso
 
 
 echo "-> MAKE ALL"
-make ARCH=arm CROSS_COMPILE=arm-eabi- EXTRA_AFLAGS=$AFLAGS -j$J all
+#make ARCH=arm CROSS_COMPILE=arm-eabi- EXTRA_AFLAGS=$AFLAGS -j$J all
 
 
 echo -n "-> CHECKING FOR ZIMAGE..."
@@ -60,7 +60,10 @@ if [ -f $KDIR/arch/arm/boot/zImage ]; then
         rm -f $RDIR/package.zip
 
 	cd $TDIR
-        zip -9 -r -v $RDIR/package.zip * -x .git
+        zip -9 -r -v $RDIR/package-unaligned.zip * -x .git
+
+	echo "-> Performing Zip Alignment..."
+	$RDIR/prebuilt/sdk/tools/linux/zipalign -f -v 4 $RDIR/package-unaligned.zip $RDIR/package.zip
 else
         echo "ERROR: NO ZIMAGE!!!"
         exit
