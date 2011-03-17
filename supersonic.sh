@@ -18,12 +18,12 @@ make distclean V=0 -j$J
 #echo "-> CLEAN"
 #make clean V=0 -j$J
 
-echo "-> RESTORE CM7 CONFIG"
-cp $BDIR/config.gz ./.config.gz
-gunzip ./.config.gz
+#echo "-> RESTORE CM7 CONFIG"
+#cp $BDIR/config.gz ./.config.gz
+#gunzip ./.config.gz
 
-echo "-> MAKE OLDCONFIG"
-make ARCH=arm CROSS_COMPILE=arm-eabi- EXTRA_AFLAGS=$AFLAGS -j$J oldconfig
+echo "-> MAKE CYANOGEN_SUPERSONIC_DEFCONFIG"
+make ARCH=arm CROSS_COMPILE=arm-eabi- EXTRA_AFLAGS=$AFLAGS -j$J cyanogen_supersonic_defconfig
 
 echo "-> MAKE ALL"
 make ARCH=arm CROSS_COMPILE=arm-eabi- EXTRA_AFLAGS=$AFLAGS -j$J all
